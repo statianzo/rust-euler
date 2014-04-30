@@ -34,39 +34,39 @@ all:
 		test
 
 doc: $(SOURCE_FILES) | src/
-	$(RUSTDOC) src/lib.rs -L "target/$(TARGET)/lib" \
+	@$(RUSTDOC) src/lib.rs -L "target/$(TARGET)/lib" \
 
 bin:
-	mkdir -p bin
+	@mkdir -p bin
 
 test: test-internal
 
 test-external: bin/test-external
-	bin/test-external
+	@bin/test-external
 
 bin/test-external: $(SOURCE_FILES) | rlib bin src/test.rs
-	$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --test src/test.rs -o bin/test-external -L "target/$(TARGET)/lib" \
+	@$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --test src/test.rs -o bin/test-external -L "target/$(TARGET)/lib" \
 
 test-internal: bin/test-internal
-	bin/test-internal
+	@bin/test-internal
 
 bin/test-internal: $(SOURCE_FILES) | rlib src bin
-	$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --test src/lib.rs -o bin/test-internal -L "target/$(TARGET)/lib" \
+	@$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --test src/lib.rs -o bin/test-internal -L "target/$(TARGET)/lib" \
 
 lib: rlib dylib
 
 rlib: $(RLIB)
 
 $(RLIB): $(SOURCE_FILES) | src/lib.rs $(TARGET_LIB_DIR)
-	$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --crate-type=rlib src/lib.rs -L "target/$(TARGET)/lib" --out-dir "target/$(TARGET)/lib/" \
+	@$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --crate-type=rlib src/lib.rs -L "target/$(TARGET)/lib" --out-dir "target/$(TARGET)/lib/" \
 
 dylib: $(DYLIB)
 
 $(DYLIB): $(SOURCE_FILES) | src/lib.rs $(TARGET_LIB_DIR)
-	$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --crate-type=dylib src/lib.rs -L "target/$(TARGET)/lib" --out-dir "target/$(TARGET)/lib/" \
+	@$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --crate-type=dylib src/lib.rs -L "target/$(TARGET)/lib" --out-dir "target/$(TARGET)/lib/" \
 
 $(TARGET_LIB_DIR):
-	mkdir -p $(TARGET_LIB_DIR)
+	@mkdir -p $(TARGET_LIB_DIR)
 
 clean:
 	rm -f "$(RLIB)"
